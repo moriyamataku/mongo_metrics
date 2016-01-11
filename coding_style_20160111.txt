@@ -1,0 +1,196 @@
+
+60 単に他のブロックに引数を渡すだけのブロックリテラルを避けるため、 ブロック引数を明示することを検討しましょう。 ただしブロックがProcに変換されることでのパフォーマンスに気をつけましょう。 [link]
+
+  require 'tempfile'
+
+  # 悪い例
+  def with_tmp_dir
+   Dir.mktmpdir do |tmp_dir|
+     Dir.chdir(tmp_dir) { |dir| yield dir }  # 引数を渡しているだけのブロック
+   end
+  end
+
+  # 良い例
+  def with_tmp_dir(&block)
+   Dir.mktmpdir do |tmp_dir|
+     Dir.chdir(tmp_dir, &block)
+   end
+  end
+
+  with_tmp_dir do |dir|
+   puts "dir is accessible as parameter and pwd is set: #{dir}"
+  end
+
+(回答)
+  メソッドがブロックを受け取る場合明示的に&blockと書くことができる。（かかなくてもメソッド内でblock.given?とすればブロックが渡ったかどうかの制御はできる）。明示的に書いた場合はさらに別メソッドに同じブロッグ付きで呼び出すときに&blockで渡せる。
+
+80 Proc.newよりprocを使いましょう。 [link]
+
+  # 悪い例
+  p = Proc.new { |n| puts n }
+
+  # 良い例
+  p = proc { |n| puts n }
+
+（回答）
+  irb> def pass (&block) block; end
+  irb> greeter = pass { |name| "Hello #{name}" }
+  ---> #<Proc>
+  irb> greeter.call("World")
+  ---> "Hello World"
+  irb> def foo(&block) lambda(&block); end
+  irb> it = foo { p 12 }
+  irb> it.call
+  ---> 12
+
+  ブロックは弱いProcオブジェクト：引数間違い→nilまたは切り捨て
+  lambdaは強いProcオブジェクト：引数間違い→ArgumentError
+
+  # 引数の扱い
+  b1 = Proc.new{|a,b,c|
+    p a,b,c
+  }
+  b1.call(2, 4)
+  #=> 2
+      4
+      nil
+
+  b2 = lambda{|a,b,c|
+    p a,b,c
+  }
+  b2.call(2, 4)
+  #=> wrong number of arguments (2 for 3) (ArgumentError)
+
+  # ジャンプ構文の挙動の違い
+  def foo
+    f = Proc.new { return :foo }
+    f.call
+    return
+  end
+
+  def bar
+    f = lambda { return :bar }
+    f.call
+    return
+  end
+
+  def h
+    yield
+  end
+
+  def hoge
+    h{ return :hoge }
+    nil
+  end
+
+  p foo()  #=> :foo
+  p bar()  #=> nil
+  p hoge() #=> :hoge
+
+            return              next           break
+  Proc.new  メソッドを抜ける      手続きを抜ける   例外が発生する
+  proc      メソッドを抜ける      手続きを抜ける   例外が発生する
+  lambda    手続きを抜ける       手続きを抜ける   手続きを抜ける
+
+81 lambdaやprocの呼び出しにはproc[]やproc.()よりproc.call()を使いましょう。 [link]
+
+  # 悪い例 - 列挙型のアクセスに似ているように見えます
+  l = ->(v) { puts v }
+  l[1]
+
+  # こちらも悪い例 - 珍しい構文です
+  l = ->(v) { puts v }
+  l.(1)
+
+  # 良い例
+  l = ->(v) { puts v }
+  l.call(1)
+
+
+70 case等価演算子===の露骨な使用は避けましょう。 その名が示す通り、caseの条件判定で用いられており、 その外で用いられると混乱のもとになります。 [link]
+
+  # 悪い例
+  Array === something
+  (1..100) === 7
+  /something/ === some_string
+
+  # 良い例
+  something.is_a?(Array)
+  (1..100).include?(7)
+  some_string =~ /something/
+
+(回答)
+  Object#===の説明を見てみるとわかりますが、基本的にこの===演算子は、サブクラスで再定義されていない限り、単にObject#==を呼び出すだけなんですね。
+
+  Module
+    kind_of?を呼んでいるだけ
+  Proc
+    callの別名
+  Range
+    include?を呼んでいるだけ
+  Regexp
+    =~やmatchとほぼ同じ*1
+
+  case gets.chomp
+  when /おはよう/
+    puts 'おはようございます、お目覚めはいかがですか？'
+  when /こんにちは/
+    puts 'こんにちは、いい天気ですね。'
+  when /こんばんは/
+    puts 'こんばんは、遅くまでお疲れ様です。'
+  else
+    puts '何か御用でしょうか？'
+  end
+
+71 ==で用が足りるならeql?は使わないようにしましょう。 eq?で実現されている、より厳密な等価性が必要になることは、実際には稀です。 [link]
+
+  # 悪い例 - eql? は 文字列に対する == と同じです
+  'ruby'.eql? some_str
+
+  # good
+  'ruby' == some_str
+  1.0.eql? x # eql? はFixnumとFloatの1を識別したいのであれば意味があります
+
+（回答）
+  eql?メソッドは、ハッシュの内部で「同じキーかどうか」を調べるために使われるメソッドです。レシーバobjが引数other_objと同じかどうかを調べ、同じならtrue、違えばfalseを返します。
+
+  オブジェクトを比較したいときは、普通はeql?メソッドを使わずに、
+  「オブジェクトの内容が同じかどうか」を調べるには==メソッドを、
+  「同じオブジェクトかどうか」を調べるにはequal?メソッドを使ってください。
+
+  Ruby 1.8.6以前のHashクラスにはeql?メソッドがないので、Objectクラスのeql?メソッド（同じオブジェクトかどうか）が使われます。
+
+  hash1 = { :a => 1, :b => 2 }
+  hash2 = { :a => 1.0, :b => 2.0 }
+  puts hash1 == hash2
+  > true
+  puts hash1.eql?(hash2)
+  > false
+
+
+75 Rubyインタープリタを走らせるときは、常に-wオプションを付けましょう。 これまでのルールのどれかを忘れてしまった時に警告を出してくれます！ [link]
+
+（回答）
+  $ ruby -w script.rb
+  rubyopt環境変数に"-w"
+  $VERBOSEグローバル変数
+
+  irb> def add (x, y)
+    z = 1
+    x + y
+  end
+
+  warning: assigned but unused variable - z
+
+  irb> def repeat (n, &block)
+    n.times { |n| block.call(n) }
+  end
+
+  warning: shadowing outer local variable - n
+
+ 84 $stderr.putsの代わりにwarnを用いましょう。 簡潔さや明快さもさることながら、 warnは必要であれば警告を抑制することができます (警告レベルを-W0を用いて0に設定することによって実現できます)。 [link]
+
+ （回答）
+ warn(*message)
+
+ $stderr.puts(*message) if !$VERBOSE.nil? && !message.empty?
