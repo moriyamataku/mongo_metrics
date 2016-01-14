@@ -1,0 +1,3 @@
+97	mapとflattenの組み合わせの代わりに、flat_mapを用いましょう。
+102	ファイル名にはsnake_caseを用いましょう。例えばhello_world.rbのように
+131	モジュールのインスタンスメソッドをクラスメソッドにしたいときは、extend selfよりもmodule_functionを使いましょう。
