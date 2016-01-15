@@ -1,3 +1,106 @@
-97	mapとflattenの組み合わせの代わりに、flat_mapを用いましょう。
+97	mapとflattenの組み合わせの代わりに、flat_mapを用いましょう。 これは深さが２以上の配列には適用できません。
+すなわち、users.first.songs == ['a', ['b','c']]のときは、 flat_mapよりmap + flattenを用いましょう。
+flattenは配列を全て平坦にするのに対し、flat_mapは配列を１次元だけ平坦にします。
+
+  # 悪い例
+  all_songs = users.map(&:songs).flatten.uniq
+
+  # 良い例
+  all_songs = users.flat_map(&:songs).uniq
+
+(回答)
+  mapメソッドは、要素の数だけ繰り返しブロックを実行し、ブロックの戻り値を集めた配列を作成して返します。
+    numbers = ["68", "65", "6C", "6C", "6F"]
+    p numbers.map {|item| item.to_i(16) }
+    => [104, 101, 108, 108, 111]
+
+  flattenメソッドは、配列の配列を平坦化した新しい配列を返します。
+    arr = [1, 2, 3, [4, 5], [6, [7, 8]]]
+    p arr.flatten
+    => [1, 2, 3, 4, 5, 6, 7, 8]
+
+  flat_map
+    irb> [1, 2, 3, [4, 5], [6, 7, 8]].flat_map{|i| i}
+    => [1, 2, 3, 4, 5, 6, 7, 8]
+
+    irb> [[[1,3], [1,2]]].map{|i| i}.flatten
+    => [1, 3, 1, 2]
+    irb> [[[1,3], [1,2]]].flat_map{|i| i}
+    => [[1, 3], [1, 2]]
+
 102	ファイル名にはsnake_caseを用いましょう。例えばhello_world.rbのように
+
 131	モジュールのインスタンスメソッドをクラスメソッドにしたいときは、extend selfよりもmodule_functionを使いましょう。
+
+  # 悪い例
+  module Utilities
+    extend self
+
+    def parse_something(string)
+      # do stuff here
+    end
+
+    def other_utility_method(number, string)
+      # do some more stuff
+    end
+  end
+
+  # 良い例
+  module Utilities
+    module_function
+
+    def parse_something(string)
+      # do stuff here
+    end
+
+    def other_utility_method(number, string)
+      # do some more stuff
+    end
+  end
+
+(回答)
+  module_function は、特異メソッドとプライベートメソッドを同時に定義するためのメソッドです。
+  特異メソッドであり、プライベートメソッドでもあるメソッドのことを「モジュール関数」と呼びます。
+
+    module M
+      module_function
+
+      def hoge
+        'hoge'
+      end
+    end
+
+  モジュール関数は (パブリックな) 特異メソッドであるので、モジュールをレシーバに指定して呼び出すことができます。
+
+    M.hoge # => 'hoge'
+
+  また、プライベートメソッドでもあるので include することでレシーバを省略して呼び出せるようになります。
+
+    class C
+      include M
+
+      def fuga
+        hoge
+      end
+    end
+
+    C.new.fuga # => 'hoge'
+
+  include してもそのクラスにパブリックメソッドが追加されるわけではありません。
+
+    C.new.hoge # => NoMethodError: private method `hoge' called
+
+  extend self は自身の持つメソッド全てを自身の特異メソッドとして定義します。
+  この場合、特異メソッドと定義したメソッドのスコープは同じになります。
+  つまり、パブリックメソッドとして定義するとモジュールを指定して呼べますが include した際にパブリックメソッドとして追加されるようになり、プライベートメソッドとして定義するとモジュールを指定して呼べず、 include した際にプライベートメソッドとして追加されます。
+
+    module Bar
+      extend self
+      def method ; end
+    end
+
+    class Foo
+      include Bar
+    end
+
+    Foo.new.method
