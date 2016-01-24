@@ -1,4 +1,87 @@
 139	あるクラスのインスタンス生成する追加の方法を提供したいときは、ファクトリメソッドの追加を検討しましょう。
-145	メソッドの別名をつける時はaliasを使いましょう。
+
+class Person
+  def self.create(options_hash)
+    # body omitted
+  end
+end
+
+# 一般的なインスタンス生成
+Product product = new Product();
+
+# ファクトリメソッドによるインスタンス生成
+# 初期化処理に必要なパラメータ等を生成クラスがうけもつことができる
+# シングルトンメソッド
+public Product factoryMethod(){
+  return new Product();
+}
+https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB:Factory_Method_UML_class_diagram.svg
+
+145	メソッドの別名をつける時はaliasを使いましょう。 クラスのレキシカルスコープの中ではselfと同じように名前解決されます。 またユーザーにとっても、実行時やサブクラス側で明示的にエイリアスを変更しなければ、 変更されないことが読み取りやすいです。
+
+class Westerner
+  def first_name
+    @names.first
+  end
+
+  alias given_name first_name
+end
+
+class Fugitive < Westerner
+  def first_name
+    'Nobody'
+  end
+end
+
+class Fugitive < Westerner
+  def first_name
+    'Nobody'
+  end
+
+  alias given_name first_name
+end
+
 146	モジュールやクラス、実行時のシングルトンクラス等では、aliasの挙動が予期できないので、エイリアス定義には常にalias_methodを用いましょう。
-167	要素が一意のものを扱うときは、Arrayの代わりにSetを用いましょう。
+
+module Mononymous
+  def self.included(other)
+    other.class_eval { alias_method :full_name, :given_name }
+  end
+end
+
+class Sting < Westerner
+  include Mononymous
+end
+
+aliasキーワード
+Module#alias_method
+
+
+167	要素が一意のものを扱うときは、Arrayの代わりにSetを用いましょう。Setは要素に重複と順序がないようなコレクションの実装です。 これはArrayの直感的な二項演算子と、Hashの速さが合わさっています。
+
+Setを用いることで、集合の比較や、集合への要素の追加・削除を高速に行うことができます。
+setをrequireすると、Enumerableモジュールにto_setというメソッドがついかされ、Setオブジェクトに変換することができるようになります。
+
+(1..5).to_set # => #<Set: {1, 2, 3, 4, 5}>
+# map,select,include?などArrayと同様のメソッドも持つ
+
+# 集合への追加・削除
+set = Set.new(1..5)
+set.add?(12) # => #<Set: {1, 2, 3, 4, 5, 12}>
+set.add?(1)  # => nil (既に同じ要素があった)
+
+set.delete?(1)   # => #<Set: {2, 3, 4, 5, 12}>
+set.delete?(100) # => nil (そんな要素はなかった)
+
+# 集合のマージ
+set = Set[1, 3, 5]
+set.merge(Set[5, 7, 9]) # => #<Set: {1, 3, 5, 7, 9}>
+
+# 集合の比較
+a = %w(Alice Bob Charie).to_set
+b = %w(Alice Bob).to_set
+
+p a.superset?(b)	# => true (aはbの上位集合)
+p b.subset?(a)		# => true (bはaの部分集合)
+
+http://suugaku-bukai.esnet.ed.jp/2008/study/2004/images/ATT00035.gif

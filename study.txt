@@ -1,0 +1,67 @@
+
+テキストによる学習等
+
+1.RailsによるアジャイルWebアプリケーション開発
+	第四部
+
+2.Perfect Ruby on Rails
+	3-1 3-4
+	5-2
+	7-1 7-11
+	9-1 9-7
+
+3.徹底攻略シルバー
+	総仕上げ①②
+		→間違った箇所をwikiに！
+
+4.ソースコードリーディング
+	おすすめ！
+		rubygems.org		https://github.com/rubygems/rubygems.org
+		Gitlab					https://github.com/gitlabhq/gitlabhq
+		We love heroku	https://github.com/ppworks/we_love_heroku
+	次点
+		WhiteHall				https://github.com/alphagov/whitehall
+		Fat Free CRM		https://github.com/fatfreecrm/fat_free_crm
+
+良く分かっていない箇所
+
+	routes
+		namespace/module/scope
+		with_option
+
+	model
+		find_or_initialize
+		リレーション、コレクション、コールバック、スコープ
+
+	view
+		simple_form
+		form_for
+		render :partial
+
+		haml,slim
+
+	module,require,auto_load,gem
+
+	activesupport::Concen extend
+
+発生したエラー
+
+	routes
+		no routes
+		no constant
+
+	view
+		missing template
+		ex render "layout/template" (layouts)
+
+	un expected - end (endがない)
+
+	undefined xxx(mapとか) No Method Error
+
+	for nil class
+
+	例外のcatch rescue_from (どこからエラーがでている？)
+
+	better_error + ログ
+
+	jQueryのデバッグ
