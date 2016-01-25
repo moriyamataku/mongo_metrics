@@ -37,12 +37,21 @@
 		simple_form
 		form_for
 		render :partial
+		link_to → get、button → post
 
 		haml,slim
+
+		css
+			inlineの使い方
 
 	module,require,auto_load,gem
 
 	activesupport::Concen extend
+
+	helper
+
+	migration
+		データパッチもできる(seedsの要領)
 
 発生したエラー
 
