@@ -29,9 +29,14 @@
 		namespace/module/scope
 		with_option
 
+	controller
+		命名規約　グループ化(admin)
+
 	model
 		find_or_initialize
 		リレーション、コレクション、コールバック、スコープ
+		正しいリレーション
+		配列の追加とsave
 
 	view
 		simple_form
@@ -41,14 +46,23 @@
 
 		haml,slim
 
+		fieldset legend
+
 		css
-			inlineの使い方
+			inlineの使い方,block,inline-block
+			名前は場所ではなく機能で
+
+	gem
+		letter_opener
+		has_secure_password
 
 	module,require,auto_load,gem
 
 	activesupport::Concen extend
 
 	helper
+
+	lib以下は置いたらすぐ使える？
 
 	migration
 		データパッチもできる(seedsの要領)
