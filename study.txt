@@ -67,6 +67,19 @@
 	migration
 		データパッチもできる(seedsの要領)
 
+	matchdata
+	pathname
+
+	正規表現
+		正規表現リテラル
+		アンカー
+		キャプチャ
+		RegExp
+		x識別子
+			フリーフォーマットモード
+
+	パーセントリテラル
+
 発生したエラー
 
 	routes
