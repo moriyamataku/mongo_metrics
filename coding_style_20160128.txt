@@ -1,17 +1,60 @@
 190	単に文字列中から文字列を探すだけの時は、
 正規表現を使ってはいけません: string['text']を使いましょう。
 
+# 数値指定
+"abcdefghi"[5]			# => "f"
+"abcdefghi"[9]			# => nil
+
+# 文字列指定
 "abcdefghi"['def']	# => "def"
 "abcdefghi"['dew']	# => nil
 
 191	文字列の添字に直接正規表現を渡すことで、文字列の構築をシンプルにできます。
 
-match = string[/regexp/]             # マッチした内容が得られる
-first_group = string[/text(grp)/, 1] # キャプチャグループの内容が得られる
-string[/text (grp)/, 1] = 'replace'  # string => 'text replace'
+"abcdefg"[/bc/]			# => "bc"
 
 192	キャプチャした結果を使う必要のないときは、
 キャプチャしないグループを用いましょう。
+
+正規表現で一致した内容を参照する為にキャプチャができる。　   ()でくくる
+一致した箇所をキャプチャしたくない（あとで参照しない）ときは (?: )
+
+# キャプチャあり
+/^([-+]?[0-9]+(.[0-9]*)?)([CF])$/ =~ '12.34F'
+$1					# => "12.34"
+$2					# => ".34"
+$3					# => "F"
+
+# キャプチャなし
+/^([-+]?[0-9]+(?:.[0-9]*)?)([CF])$/ =~ '12.34F'
+$1					# => "12.34"
+$2					# => "F"
+
+# キャプチャ
+/programing (.+)\z/ =~ 'programing ruby'
+p $1  									# => "ruby"
+p Regexp.last_match[1] 	# => "ruby"
+
+# 名前付きキャプチャ
+/programing (?<name>.+)\z/ =~ 'programing ruby'
+p name 											# => "ruby"
+
 195	文字クラスの中では、特別な意味を持つ文字が少ないので注意が必要です:
 197	複雑な正規表現にはx識別子を用いましょう。
+
+regexp = /
+  start         # some text
+  \s            # white space char
+  (group)       # first group
+  (?:alt1|alt2) # some alternation
+  end
+/x
+
 198	sub/gsubでの複雑な置換は、ブロックやハッシュを用いることで実現できます。
+
+a = "abcdefg-abcdefg"
+a.sub(/abc/, 'xyz')											# => "xyzdefg-abcdefg"
+a.gsub(/abc/, 'xyz')										# => "xyzdefg-xyzdefg"
+
+a.sub(/abc/) { |str| str.capitalize }		# => "Abcdefg-abcdefg"
+a.gsub(/abc/) { |str| str.capitalize }	# => "Abcdefg-Abcdefg"
