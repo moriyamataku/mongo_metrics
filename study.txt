@@ -31,17 +31,22 @@
 
 	controller
 		命名規約　グループ化(admin)
+		aroundはyieldみたいな感じ？
 
 	model
 		find_or_initialize
 		リレーション、コレクション、コールバック、スコープ
 		正しいリレーション
 		配列の追加とsave
+		aroundのタイミングと使いどころ
+		findにidの配列を渡した時見つかれなければ
+			見つからないやつがエラー
 
 	view
 		simple_form
 		form_for
 		render :partial
+		yield 〜
 		link_to → get、button → post
 
 		haml,slim

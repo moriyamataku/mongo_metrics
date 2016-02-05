@@ -1,0 +1,29 @@
+220	破壊的変更をしなくても済むなら、できるだけ関数的プログラミング手法を使いましょう。
+
+「インスタンスメソッド」はレシーバをつけて呼び出すメソッドである
+「クラスメソッド」はレシーバがクラス名つまり、定数で指定して呼び出せるメソッドである
+「関数的メソッド」はレシーバ省略形式で呼ばれるメソッドのことである
+「関数的メソッド」の例として、putsが該当する。
+
+def normalized_name!(origin_str)
+  str = origin_str
+  str.sub! '-', ''
+  str.capitalize!
+end
+
+snack = 'caramel-corn'
+snack2 = normalized_name!(snack)
+p snack			# => "Caramelcorn"
+p snack2		# => "Caramelcorn"
+
+
+def normalized_name(origin_str)
+  str = origin_str.dup
+  str.sub! '-', ''
+  str.capitalize!
+end
+
+snack = 'caramel-corn'
+snack2 = normalized_name(snack)
+p snack			# => "caramel-corn"
+p snack2		# => "Caramelcorn"
