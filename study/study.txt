@@ -5,10 +5,27 @@
 	第四部
 
 2.Perfect Ruby on Rails
-	3-1 3-4
-	5-2
+	3-1 Sprockets
+	3-2 CoffeeScript
+	 	関数 .. (引数) ->
+		インデントが１つのブロックを表す
+		-> と =>
+			コールバック内では「this」がそのオブジェクトを表す
+			ファットアローを使えばスコープを引き継げる
+	3-3 Sass
+	3-4 Turbolinks
+		application.jsから
+			//=require turbolinks
+			gem 'turbolinks' を削除すれば無効になる
+	5-2 Pry
+		ステップ実行 .. gem 'pry-byebug'
 	7-1 7-11
 	9-1 9-7
+	9-4 値オブジェクト
+		モデルクラスの責務を別クラスに分ける
+		例）Userモデルの中のAddress
+				Addressの中に県、市、町が入っている
+		簡易に書くとcompose_of
 
 3.徹底攻略シルバー
 	総仕上げ①②
