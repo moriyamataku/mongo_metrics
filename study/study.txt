@@ -127,3 +127,14 @@
 	bundle exec rails c
 	kernel_require.rb cannot load such file bundler/setup
 	bundle exec rake rails:update:bin
+
+  JSON::ParserError unexpected token
+    ajaxのパラメータの並び順？
+    $.ajax url,
+      type: 'POST'
+      data:
+        hokensha_bango: hokensha_bango
+        shipped_at: shipped_at
+      dataType: 'json'
+
+  RSpecから実行するとincludeしたclass_methodがundefined
