@@ -1,0 +1,64 @@
+bundle install --path vendor/bundle
+
+http://qiita.com/mizchi/items/bdf84f0b1c11c2870290
+http://qiita.com/joker1007/items/9068e223744b3ac8c6dd
+http://qiita.com/cotto89/items/8f7f67bfd726de023f13
+http://waka.github.io/2015/11/25/gulp_sprockets.html
+
+Node.jsとは，
+http://gihyo.jp/dev/serial/01/nodejs/0001
+ブラウザGoogle Chrome用に開発されたJavaScriptエンジンV8が
+サーバ上でプログラムを実行できるように，
+ファイルやネットワークI/Oなど多くの機能を追加したものです。
+軽量で効率よく多くのリクエストを処理する
+ネットワークアプリケーションの構築ができるプラットフォームになっています。
+いわゆるサーバサイドJavaScriptの代名詞として注目を集めています。
+
+$ brew install node.js
+$ node -v
+
+サーバサイド・スクリプトとは、
+Webサーバ上で動作し、Webサーバ上でプログラムの実行が要求されるたびに、
+結果をウェブブラウザに対して送信するようなプログラムである。
+
+ブラウザ上で動くJavaScriptはすべてのjsファイルがマージされたものとしてスコープが適用されますが，
+nodeにはモジュールという単位で各機能を分割することができます。
+
+npmとは、(Node Packaged Modules)
+nodeではすでに多くのライブラリパッケージが（主にGitHubで）公開されています。
+そして多くのパッケージはnpmという専用のパッケージ管理ツールを使って，
+簡単に導入することができます。
+http://search.npmjs.org/を見るとたくさんのライブラリがnpmに登録されていることがわかります。
+
+$ npm install -g forever
+
+Node.js自体のアップデート
+
+$ npm update
+
+Bower とは
+Twitter社が作ったフロントエンド用のパッケージマネージャです。
+Java で言う Maven、 Ruby で言う gem、 Perl で言う cpan のようなものです。
+Node.jsには npm と呼ばれるパッケージマネージャがありますが、それに強く影響を受けています。
+
+$ npm install bower
+$ bower init
+> bower.json
+
+Sprocketsとは
+JSファイルごとの依存関係の管理
+alt-JS(coffee-script等)やJSTのコンパイル
+JSやCSSの結合、minify
+
+CommonJSとは
+JavaScriptでサーバサイドやコマンドラインツール、
+GUIツールなど色んなアプリを開発するための標準的なAPIの仕様です。(文脈によってはそれを決めるプロジェクト)
+
+遡ること2009年ごろ、JavaScript最高。JavaScriptでサーバサイドも作りたい。という人が現れましたが、JavaScriptはブラウザ上で動かすために生まれた言語のため、
+「モジュール定義や読み込みもない。標準入出力もない。File I/Oもない。標準的に欲しいものが色々ない。」
+という状況の中で、Node.jsのようなサーバサイドでJavaScriptが動く環境が多く生まれてきました。それぞれで、勝手にオレオレAPIを作るのではなく、標準的なAPIの仕様を決めて、それに沿った実装にしよう。そうすれば、色んなサーバサイドJavaScript環境で動くでしょう。と言って始まったのがCommonJSです。
+当初ServerJSというサーバサイドのAPI仕様だけを定めていましたが、それ以外もこれでいいのでは？ということで、CommonJSに改名しました。
+
+とはいえ、CommonJSで色々API仕様が決まったかというと、そうではなかったようです。しかし、モジュールのAPI仕様は、Node.jsで実装されそれが広まったこともあり、広く知られるようになりました。(仕様が決まらず、実装が先行しているのは、最近のExtensible Webにも近い感じがします)
+
+browserify
